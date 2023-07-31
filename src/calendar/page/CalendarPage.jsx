@@ -3,10 +3,29 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import { addHours } from "date-fns";
 
-import { Navbar, CalendarEvent } from '../'
+import { Navbar, CalendarEvent, CalendarModal } from "../";
 import { localizer, getMessages } from "../../helpers";
+import { useState } from "react";
 
 export const CalendarPage = () => {
+    // Guardamos en el locale storage, la ultima vista visitada
+    const [lastView, setLastView] = useState(
+        localStorage.getItem("lastView") || "week"
+    );
+
+    const onDobleClick = (event) => {
+        console.log({ onDobleClick: event });
+    };
+
+    const onSelected = (event) => {
+        console.log({ onClick: event });
+    };
+
+    const onViewChanged = (event) => {
+        localStorage.setItem("lastView", event);
+        setLastView(event);
+    };
+
     const events = [
         {
             title: "Cumpleaños Jefe",
@@ -26,13 +45,13 @@ export const CalendarPage = () => {
             end: addHours(new Date(), 7),
             bgColor: "#fafafa",
             user: {
-                name: "Jaime"
-            }
-        }
+                name: "Jaime",
+            },
+        },
     ];
 
+    // eslint-disable-next-line no-unused-vars
     const eventStyleGetter = (event, start, end, isSelected) => {
-        console.log({ event, start, end, isSelected})
         const style = {
             backgroundColor: "#347CF7",
             borderRadius: "0px",
@@ -48,21 +67,24 @@ export const CalendarPage = () => {
     return (
         <>
             <Navbar />
-            <div>
-                <Calendar
-                    culture="es"
-                    events={events}
-                    localizer={localizer}
-                    startAccessor="start"
-                    endAccessor="end"
-                    style={{ height: 500 }}
-                    messages={getMessages()}
-                    eventPropGetter={ eventStyleGetter }
-                    components={{
-                        event: CalendarEvent
-                    }}
-                />
-            </div>
+            <Calendar
+                culture="es"
+                events={events}
+                defaultView={lastView}
+                localizer={localizer}
+                startAccessor="start"
+                endAccessor="end"
+                style={{ height: 500 }}
+                messages={getMessages()}
+                eventPropGetter={eventStyleGetter}
+                components={{
+                    event: CalendarEvent,
+                }}
+                onDoubleClickEvent={onDobleClick}
+                onSelectEvent={onSelected}
+                onView={onViewChanged}
+            />
+            <CalendarModal />
         </>
     );
 };
