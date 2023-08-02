@@ -3,8 +3,9 @@ import ReactModal from "react-modal";
 import { addHours, differenceInSeconds } from "date-fns";
 import DatePicker, { registerLocale } from "react-datepicker";
 import es from "date-fns/locale/es";
+import { useDispatch } from "react-redux";
 
-import { NotifyToasti } from "../../components/NotifyToasti";
+import { openModal } from "../../store/notifications";
 
 import "./modal.css";
 import "react-datepicker/dist/react-datepicker.css";
@@ -25,15 +26,20 @@ ReactModal.setAppElement("#root");
 registerLocale("es", es);
 
 export const CalendarModal = () => {
-    const [modalIsOpen, setModalIsOpen] = useState(true);
-    const [isActive, setIsActive] = useState(false);
-    const [message, setMessage] = useState("");
+    const dispatch = useDispatch();
 
+    const [modalIsOpen, setModalIsOpen] = useState(true);
     const [formValues, setFormValues] = useState({
-        title: "Busqueda de notas",
-        notes: "Este es el ejemplo de una nota",
+        title: "",
+        notes: "",
         start: new Date(),
         end: addHours(new Date(), 2),
+    });
+    const [error, setError] = useState({
+        title: false,
+        note: false,
+        start: false,
+        end: false,
     });
 
     const onCloseModal = () => {
@@ -61,27 +67,71 @@ export const CalendarModal = () => {
     const onSubmit = (event) => {
         event.preventDefault();
 
+        setError({
+            title: false,
+            note: false,
+            start: false,
+            end: false,
+        });
+
         // VERIFICO QUE LA FECHA FINAL SEA SIEMPRE MAYOR A LA INICIAL, ANTES DE GUARDAR CUALQUIER DATO
         const difference = differenceInSeconds(
             formValues.end,
             formValues.start
         );
 
-        if (difference <= 0 || isNaN(difference)) {
-            setMessage("La Fecha de finalizacion debe ser mayor a la fecha inicial")
-            setIsActive(true);
-            
+        if (formValues.start <= 0) {
+            dispatch(openModal("Los campos de fecha no pueden estar vacios"));
+            setError({
+                ...error,
+                ["start"]: true,
+            });
+
             return;
         }
 
-        if (formValues.title.length <= 0 || formValues.notes.length <= 0) {
-            setMessage("El campo de titulo y nota no pudede estar vacio")
-            setIsActive(true)
+        if (formValues.end <= 0) {
+            dispatch(openModal("Los campos de fecha no pueden estar vacios"));
+            setError({
+                ...error,
+                ["end"]: true,
+            });
 
-            return
+            return;
         }
 
-        console.log(formValues);
+        if (difference <= 0 || isNaN(difference)) {
+            dispatch(
+                openModal(
+                    "La fecha de finalizacion debe ser mayor a la de inicio"
+                )
+            );
+            setError({
+                ...error,
+                ["end"]: true,
+            });
+
+            return;
+        }
+
+        if (formValues.title.length <= 0) {
+            dispatch(openModal("El titulo y nota son requeridos"));
+            setError({
+                ...error,
+                ["title"]: true,
+            });
+            return;
+        }
+
+        if (formValues.notes.length <= 0) {
+            dispatch(openModal("El titulo y nota son requeridas"));
+            setError({
+                ...error,
+                ["note"]: true,
+            });
+
+            return;
+        }
     };
 
     return (
@@ -101,7 +151,9 @@ export const CalendarModal = () => {
                         <label className="mb-1">Fecha y hora inicio</label>
                         <DatePicker
                             locale="es"
-                            className="form-control"
+                            className={`${
+                                error.start ? "is-invalid" : ""
+                            } form-control`}
                             selected={formValues.start}
                             onChange={(date) =>
                                 onPickerDateChange("start", date)
@@ -117,7 +169,9 @@ export const CalendarModal = () => {
                         <DatePicker
                             locale="es"
                             minDate={formValues.start}
-                            className="form-control"
+                            className={`${
+                                error.end ? "is-invalid" : ""
+                            } form-control`}
                             selected={formValues.end}
                             onChange={(date) => onPickerDateChange("end", date)}
                             dateFormat="dd/MM/yyyy h:mm aa"
@@ -131,7 +185,9 @@ export const CalendarModal = () => {
                         <label className="mb-1">Titulo y notas</label>
                         <input
                             type="text"
-                            className="form-control"
+                            className={`${
+                                error.title ? "is-invalid" : ""
+                            } form-control`}
                             placeholder="Título del evento"
                             name="title"
                             autoComplete="off"
@@ -146,7 +202,9 @@ export const CalendarModal = () => {
                     <div className="form-group mb-2">
                         <textarea
                             type="text"
-                            className="form-control"
+                            className={`${
+                                error.note ? "is-invalid" : ""
+                            } form-control`}
                             placeholder="Notas"
                             rows="5"
                             name="notes"
@@ -167,11 +225,6 @@ export const CalendarModal = () => {
                         <span> Guardar</span>
                     </button>
                 </form>
-                
-                {
-                    isActive && <NotifyToasti message={message} isActive={isActive} setIsActive={setIsActive} />
-                }
-                
             </div>
         </ReactModal>
     );
