@@ -1,25 +1,12 @@
-import { useState } from "react";
 import ReactModal from "react-modal";
-import { addHours, differenceInSeconds } from "date-fns";
+import { addHours } from "date-fns";
 import DatePicker, { registerLocale } from "react-datepicker";
 import es from "date-fns/locale/es";
 
-import { useUiStore } from "../../hooks/useUiStore";
+import { useForm, useUiStore } from "../../hooks";
+import { customStylesModal } from "../../helpers";
 
-import "./modal.css";
 import "react-datepicker/dist/react-datepicker.css";
-import "./datePicker.css";
-
-const customStyles = {
-    content: {
-        top: "50%",
-        left: "50%",
-        right: "auto",
-        bottom: "auto",
-        marginRight: "-50%",
-        transform: "translate(-50%, -50%)",
-    },
-};
 
 ReactModal.setAppElement("#root");
 registerLocale("es", es);
@@ -31,98 +18,32 @@ export const CalendarModal = () => {
         openToastify,
     } = useUiStore();
 
-    const [formValues, setFormValues] = useState({
+    const { formValues, onInputChange, onPickerDateChange, error, validateForm } = useForm({
         title: "",
         notes: "",
         start: new Date(),
         end: addHours(new Date(), 2),
     });
 
-    const [error, setError] = useState({
-        title: false,
-        note: false,
-        start: false,
-        end: false,
-    });
-
-    const onInputChange = ({ target }) => {
-        const { value, name } = target;
-
-        setFormValues({
-            ...formValues,
-            [name]: value,
-        });
-    };
-
-    const onPickerDateChange = (type, date) => {
-        console.log(date);
-        setFormValues({
-            ...formValues,
-            [type]: date,
-        });
-    };
-
     const onSubmit = (event) => {
         event.preventDefault();
 
-        setError({
-            title: false,
-            note: false,
-            start: false,
-            end: false,
-        });
+        const response = validateForm()
 
-        // VERIFICO QUE LA FECHA FINAL SEA SIEMPRE MAYOR A LA INICIAL, ANTES DE GUARDAR CUALQUIER DATO
-        const difference = differenceInSeconds(
-            formValues.end,
-            formValues.start
-        );
+        if (response?.message) {
+            openToastify(response.message)
 
-        if (formValues.start <= 0) {
-            openToastify("Los campos de fecha no pueden estar vacios");
-            setError({
-                ...error,
-                ["start"]: true,
-            });
-
-            return;
+            return
         }
 
-        if (formValues.end <= 0) {
-            openToastify("Los campos de fecha no pueden estar vacios");
-            setError({
-                ...error,
-                ["end"]: true,
-            });
-
-            return;
-        }
-
-        if (difference <= 0 || isNaN(difference)) {
-            openToastify("La fecha de finalizacion debe ser mayor a la de inicio");
-            setError({
-                ...error,
-                ["end"]: true,
-            });
-
-            return;
-        }
-
-        if (formValues.title.length <= 0) {
-            openToastify("El titulo es requerido");
-            setError({
-                ...error,
-                ["title"]: true,
-            });
-            return;
-        }
+        console.log("TODO LISTO PARA EL SUBMIT")
     };
 
     return (
         <ReactModal
             isOpen={isVisible}
             onRequestClose={closeDateModal}
-            style={customStyles}
+            style={customStylesModal}
             className="modal"
             overlayClassName="modal-fondo"
             closeTimeoutMS={200}
@@ -135,9 +56,7 @@ export const CalendarModal = () => {
                         <label className="mb-1">Fecha y hora inicio</label>
                         <DatePicker
                             locale="es"
-                            className={`${
-                                error.start ? "is-invalid" : ""
-                            } form-control`}
+                            className={` ${error?.start ? "is-invalid" : "" } form-control`}
                             selected={formValues.start}
                             onChange={(date) =>
                                 onPickerDateChange("start", date)
@@ -153,9 +72,7 @@ export const CalendarModal = () => {
                         <DatePicker
                             locale="es"
                             minDate={formValues.start}
-                            className={`${
-                                error.end ? "is-invalid" : ""
-                            } form-control`}
+                            className={`${error?.end ? "is-invalid" : "" } form-control`}
                             selected={formValues.end}
                             onChange={(date) => onPickerDateChange("end", date)}
                             dateFormat="dd/MM/yyyy h:mm aa"
@@ -169,9 +86,7 @@ export const CalendarModal = () => {
                         <label className="mb-1">Titulo y notas</label>
                         <input
                             type="text"
-                            className={`${
-                                error.title ? "is-invalid" : ""
-                            } form-control`}
+                            className={` ${ error?.title ? "is-invalid" : "" } form-control`}
                             placeholder="Título del evento"
                             name="title"
                             autoComplete="off"
