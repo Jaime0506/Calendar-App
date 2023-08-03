@@ -6,15 +6,17 @@ import { addHours } from "date-fns";
 import { Navbar, CalendarEvent, CalendarModal } from "../";
 import { localizer, getMessages } from "../../helpers";
 import { useState } from "react";
+import { useUiStore } from "../../hooks/useUiStore";
 
 export const CalendarPage = () => {
     // Guardamos en el locale storage, la ultima vista visitada
+    const { openDateModal } = useUiStore()
     const [lastView, setLastView] = useState(
         localStorage.getItem("lastView") || "week"
     );
 
-    const onDobleClick = (event) => {
-        console.log({ onDobleClick: event });
+    const onDobleClick = () => {
+        openDateModal()
     };
 
     const onSelected = (event) => {

@@ -3,9 +3,8 @@ import ReactModal from "react-modal";
 import { addHours, differenceInSeconds } from "date-fns";
 import DatePicker, { registerLocale } from "react-datepicker";
 import es from "date-fns/locale/es";
-import { useDispatch } from "react-redux";
 
-import { openModal } from "../../store/notifications";
+import { useUiStore } from "../../hooks/useUiStore";
 
 import "./modal.css";
 import "react-datepicker/dist/react-datepicker.css";
@@ -26,26 +25,25 @@ ReactModal.setAppElement("#root");
 registerLocale("es", es);
 
 export const CalendarModal = () => {
-    const dispatch = useDispatch();
+    const {
+        modal: { isVisible },
+        closeDateModal,
+        openToastify,
+    } = useUiStore();
 
-    const [modalIsOpen, setModalIsOpen] = useState(true);
     const [formValues, setFormValues] = useState({
         title: "",
         notes: "",
         start: new Date(),
         end: addHours(new Date(), 2),
     });
+
     const [error, setError] = useState({
         title: false,
         note: false,
         start: false,
         end: false,
     });
-
-    const onCloseModal = () => {
-        console.log("Cerrando Modal");
-        setModalIsOpen(false);
-    };
 
     const onInputChange = ({ target }) => {
         const { value, name } = target;
@@ -81,7 +79,7 @@ export const CalendarModal = () => {
         );
 
         if (formValues.start <= 0) {
-            dispatch(openModal("Los campos de fecha no pueden estar vacios"));
+            openToastify("Los campos de fecha no pueden estar vacios");
             setError({
                 ...error,
                 ["start"]: true,
@@ -91,7 +89,7 @@ export const CalendarModal = () => {
         }
 
         if (formValues.end <= 0) {
-            dispatch(openModal("Los campos de fecha no pueden estar vacios"));
+            openToastify("Los campos de fecha no pueden estar vacios");
             setError({
                 ...error,
                 ["end"]: true,
@@ -101,11 +99,7 @@ export const CalendarModal = () => {
         }
 
         if (difference <= 0 || isNaN(difference)) {
-            dispatch(
-                openModal(
-                    "La fecha de finalizacion debe ser mayor a la de inicio"
-                )
-            );
+            openToastify("La fecha de finalizacion debe ser mayor a la de inicio");
             setError({
                 ...error,
                 ["end"]: true,
@@ -115,29 +109,19 @@ export const CalendarModal = () => {
         }
 
         if (formValues.title.length <= 0) {
-            dispatch(openModal("El titulo y nota son requeridos"));
+            openToastify("El titulo es requerido");
             setError({
                 ...error,
                 ["title"]: true,
             });
             return;
         }
-
-        if (formValues.notes.length <= 0) {
-            dispatch(openModal("El titulo y nota son requeridas"));
-            setError({
-                ...error,
-                ["note"]: true,
-            });
-
-            return;
-        }
     };
 
     return (
         <ReactModal
-            isOpen={modalIsOpen}
-            onRequestClose={onCloseModal}
+            isOpen={isVisible}
+            onRequestClose={closeDateModal}
             style={customStyles}
             className="modal"
             overlayClassName="modal-fondo"
@@ -202,9 +186,7 @@ export const CalendarModal = () => {
                     <div className="form-group mb-2">
                         <textarea
                             type="text"
-                            className={`${
-                                error.note ? "is-invalid" : ""
-                            } form-control`}
+                            className="form-control"
                             placeholder="Notas"
                             rows="5"
                             name="notes"

@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { notificationsSlice } from "./notifications/notificationsSlice";
+import { uiSlice } from "./ui/uiSlice";
 
 export const store = configureStore({
     reducer: {
-        notification: notificationsSlice.reducer
+        ui: uiSlice.reducer
     }
 })
