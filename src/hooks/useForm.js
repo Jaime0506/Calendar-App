@@ -63,6 +63,7 @@ export const useForm = (initialState = {}) => {
     
     return {
         formValues,
+        setFormValues,
         onInputChange,
         onPickerDateChange,
         validateForm,

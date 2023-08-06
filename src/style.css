@@ -44,3 +44,32 @@
     border: 0;
     width: 100%;
 }
+
+
+.fab {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    bottom: 25px;
+    font-size: 30px;
+    padding: 25px;
+    position: fixed;
+    right: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fab-danger {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    bottom: 25px;
+    font-size: 30px;
+    padding: 25px;
+    position: fixed;
+    left: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

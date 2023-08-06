@@ -1,13 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    toastify: {
-        isVisible: false,
-        message: "",
-    },
-    modal: {
-        isVisible: false,
-    }
+    isVisibleToastify: false,
+    messageToastify: "",
+    isVisibleModal: false
 };
 
 export const uiSlice = createSlice({
@@ -15,21 +11,21 @@ export const uiSlice = createSlice({
     initialState: initialState,
     reducers: {
         onOpenToastify: (state, action) => {
-            state.toastify.isVisible = true
-            state.toastify.message = action.payload
+            state.isVisibleToastify = true
+            state.messageToastify = action.payload
         },
         
         onCloseToastify: (state) => {
-            state.toastify.isVisible = false
-            state.toastify.message = ""
+            state.isVisibleToastify = false
+            state.messageToastify = ""
         },
 
         onOpenModal: (state) => {
-            state.modal.isVisible = true
+            state.isVisibleModal = true
         },
 
         onCloseModal: (state) => {
-            state.modal.isVisible = false
+            state.isVisibleModal = false
         }
     },
 });

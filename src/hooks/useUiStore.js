@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { onCloseModal, onCloseToastify, onOpenModal, onOpenToastify } from "../store/ui"
 
 export const useUiStore = () => {
-    const { toastify, modal } = useSelector(state => state.ui)
+    const { isVisibleToastify, messageToastify, isVisibleModal } = useSelector(state => state.ui)
     const dispatch = useDispatch()
 
     const openDateModal = () => {
@@ -23,8 +23,9 @@ export const useUiStore = () => {
 
     return {
         // properties
-        toastify,
-        modal,
+        isVisibleToastify,
+        messageToastify,
+        isVisibleModal,
 
         openDateModal,
         closeDateModal,

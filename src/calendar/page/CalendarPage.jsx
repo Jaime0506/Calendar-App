@@ -1,56 +1,33 @@
+import { useState } from "react";
 import { Calendar } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
-import { addHours } from "date-fns";
-
-import { Navbar, CalendarEvent, CalendarModal } from "../";
+import { Navbar, CalendarEvent, CalendarModal, FabAddNew, FabDelete } from "../";
 import { localizer, getMessages } from "../../helpers";
-import { useState } from "react";
-import { useUiStore } from "../../hooks/useUiStore";
+import { useUiStore, useCalendarStore } from "../../hooks";
 
 export const CalendarPage = () => {
     // Guardamos en el locale storage, la ultima vista visitada
     const { openDateModal } = useUiStore()
+    const { events, setActiveEvent } = useCalendarStore()
+
     const [lastView, setLastView] = useState(
         localStorage.getItem("lastView") || "week"
     );
 
-    const onDobleClick = () => {
+    const onDobleClick = (event) => {
+        console.log(event)
         openDateModal()
     };
 
     const onSelected = (event) => {
-        console.log({ onClick: event });
+        setActiveEvent(event)
     };
 
     const onViewChanged = (event) => {
         localStorage.setItem("lastView", event);
         setLastView(event);
-    };
-
-    const events = [
-        {
-            title: "Cumpleaños Jefe",
-            notes: "Hay que comprar pastel",
-            start: new Date(),
-            end: addHours(new Date(), 2),
-            bgColor: "#fafafa",
-            user: {
-                id: "1234",
-                name: "Jaime",
-            },
-        },
-        {
-            title: "Cumpleaños mi vida Hermosa",
-            notes: "Cumple años el amor de mi vida, lo mas lindo que tengo",
-            start: addHours(new Date(), 5),
-            end: addHours(new Date(), 7),
-            bgColor: "#fafafa",
-            user: {
-                name: "Jaime",
-            },
-        },
-    ];
+    };    
 
     // eslint-disable-next-line no-unused-vars
     const eventStyleGetter = (event, start, end, isSelected) => {
@@ -76,9 +53,9 @@ export const CalendarPage = () => {
                 localizer={localizer}
                 startAccessor="start"
                 endAccessor="end"
-                style={{ height: 500 }}
+                style={{ height: 'calc( 100vh - 80px )' }}
                 messages={getMessages()}
-                eventPropGetter={eventStyleGetter}
+                eventPropGetter= {eventStyleGetter }
                 components={{
                     event: CalendarEvent,
                 }}
@@ -87,6 +64,8 @@ export const CalendarPage = () => {
                 onView={onViewChanged}
             />
             <CalendarModal />
+            <FabAddNew />
+            <FabDelete />
         </>
     );
 };

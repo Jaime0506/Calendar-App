@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 
 export const CalendarEvent = ({ event }) => {
     const { title, user } = event;
-    // console.log(event)
 
     return (
         <>

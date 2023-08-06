@@ -3,45 +3,58 @@ import { addHours } from "date-fns";
 import DatePicker, { registerLocale } from "react-datepicker";
 import es from "date-fns/locale/es";
 
-import { useForm, useUiStore } from "../../hooks";
+import { useCalendarStore, useForm, useUiStore } from "../../hooks";
 import { customStylesModal } from "../../helpers";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { useEffect } from "react";
 
 ReactModal.setAppElement("#root");
 registerLocale("es", es);
 
 export const CalendarModal = () => {
-    const {
-        modal: { isVisible },
-        closeDateModal,
-        openToastify,
-    } = useUiStore();
+    const { isVisibleModal, closeDateModal, openToastify } = useUiStore();
+    const { activeEvent, startSavingEvent } = useCalendarStore();
 
-    const { formValues, onInputChange, onPickerDateChange, error, validateForm } = useForm({
+    const {
+        formValues,
+        setFormValues,
+        onInputChange,
+        onPickerDateChange,
+        error,
+        validateForm,
+    } = useForm({
         title: "",
         notes: "",
         start: new Date(),
         end: addHours(new Date(), 2),
     });
 
+    useEffect(() => {
+        if (activeEvent != null) {
+            setFormValues({ ...activeEvent });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeEvent]);
+
     const onSubmit = (event) => {
         event.preventDefault();
 
-        const response = validateForm()
+        const response = validateForm();
 
         if (response?.message) {
-            openToastify(response.message)
+            openToastify(response.message);
 
-            return
+            return;
         }
 
-        console.log("TODO LISTO PARA EL SUBMIT")
+        startSavingEvent(formValues);
+        closeDateModal();
     };
 
     return (
         <ReactModal
-            isOpen={isVisible}
+            isOpen={isVisibleModal}
             onRequestClose={closeDateModal}
             style={customStylesModal}
             className="modal"
@@ -49,14 +62,26 @@ export const CalendarModal = () => {
             closeTimeoutMS={200}
         >
             <div className="p-3">
-                <h1> Nuevo evento </h1>
-                <hr />
+                {activeEvent?._id ? (
+                    <>
+                        <h1> Editar Evento </h1>
+                        <hr />
+                    </>
+                ) : (
+                    <>
+                        <h1> Nuevo evento </h1>
+                        <hr />
+                    </>
+                )}
+
                 <form className="container">
                     <div className="form-group mb-3">
                         <label className="mb-1">Fecha y hora inicio</label>
                         <DatePicker
                             locale="es"
-                            className={` ${error?.start ? "is-invalid" : "" } form-control`}
+                            className={` ${
+                                error?.start ? "is-invalid" : ""
+                            } form-control`}
                             selected={formValues.start}
                             onChange={(date) =>
                                 onPickerDateChange("start", date)
@@ -72,7 +97,9 @@ export const CalendarModal = () => {
                         <DatePicker
                             locale="es"
                             minDate={formValues.start}
-                            className={`${error?.end ? "is-invalid" : "" } form-control`}
+                            className={`${
+                                error?.end ? "is-invalid" : ""
+                            } form-control`}
                             selected={formValues.end}
                             onChange={(date) => onPickerDateChange("end", date)}
                             dateFormat="dd/MM/yyyy h:mm aa"
@@ -86,7 +113,9 @@ export const CalendarModal = () => {
                         <label className="mb-1">Titulo y notas</label>
                         <input
                             type="text"
-                            className={` ${ error?.title ? "is-invalid" : "" } form-control`}
+                            className={` ${
+                                error?.title ? "is-invalid" : ""
+                            } form-control`}
                             placeholder="Título del evento"
                             name="title"
                             autoComplete="off"

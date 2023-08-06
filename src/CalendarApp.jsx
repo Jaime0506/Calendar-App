@@ -3,20 +3,20 @@ import { BrowserRouter } from "react-router-dom";
 import { AppRouter } from "./router";
 import { NotifyToasti } from "./components";
 
-import { useUiStore } from "./hooks/useUiStore";
+import { useUiStore } from "./hooks";
 
 export const CalendarApp = () => {
     
-    const { toastify: { isVisible, message }, closeToastify } = useUiStore()
+    const {  isVisibleToastify, messageToastify, closeToastify } = useUiStore()
 
     return (
         <BrowserRouter>
             <AppRouter />
 
-            {isVisible && (
+            {isVisibleToastify && (
                 <NotifyToasti
-                    message={message}
-                    isActive={isVisible}
+                    isActive={isVisibleToastify}
+                    message={messageToastify}
                     onClose={closeToastify}
                 />
             )}
