@@ -8,7 +8,7 @@ import { useUiStore } from "./hooks";
 export const CalendarApp = () => {
     
     const {  isVisibleToastify, messageToastify, closeToastify } = useUiStore()
-
+    
     return (
         <BrowserRouter>
             <AppRouter />
