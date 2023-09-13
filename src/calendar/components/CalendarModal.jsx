@@ -13,7 +13,7 @@ ReactModal.setAppElement("#root");
 registerLocale("es", es);
 
 export const CalendarModal = () => {
-    const { isVisibleModal, closeDateModal, openToastify } = useUiStore();
+    const { isVisibleModal, closeDateModal } = useUiStore();
     const { activeEvent, startSavingEvent } = useCalendarStore();
 
     const {
@@ -42,11 +42,7 @@ export const CalendarModal = () => {
 
         const response = validateForm();
 
-        if (response?.message) {
-            openToastify(response.message);
-
-            return;
-        }
+        if (response?.message)  return;
 
         startSavingEvent(formValues);
         closeDateModal();

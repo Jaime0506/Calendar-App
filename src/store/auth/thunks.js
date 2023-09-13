@@ -17,9 +17,7 @@ export const onLogin = (email, password) => {
             }
 
         } catch (error) {
-            // const { response: {data} } = error
-            console.log("Paso algo malo ya miramos que se hace")
-            dispatch(logout())
+            dispatch(logout("Credenciales incorrectos"))
         }
     }
 }

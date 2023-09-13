@@ -1,37 +1,29 @@
-import PropTypes from "prop-types";
 import { useEffect } from "react";
 
 import { ToastContainer, toast } from "react-toastify";
+import { useAuthStore } from "../hooks";
 import "react-toastify/dist/ReactToastify.css";
 
-export const NotifyToasti = ({message, isActive, onClose}) => {
+
+export const NotifyToasti = () => {
+    const { errorMessage } = useAuthStore()
 
     useEffect(() => {
-        if (isActive) {
-            toast.error(message, {
+        errorMessage && (
+            toast.error(errorMessage, {
                 position: "bottom-right",
-                autoClose: 6000,
+                autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
+                draggable: false,
                 theme: "colored",
-                onClose: () => onClose()
-            });
-        }
+            })
+        )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isActive, message]);
+    }, [errorMessage]);
 
     return (
-        <div>
-            <ToastContainer />
-        </div>
+        <ToastContainer limit={1} />
     );
-};
-
-NotifyToasti.propTypes = {
-    message: PropTypes.string.isRequired,
-    isActive: PropTypes.bool,
-    onClose: PropTypes.func.isRequired
 };
