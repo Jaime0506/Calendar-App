@@ -2,29 +2,84 @@ import { useState } from "react";
 import { useAuthStore } from "../../hooks";
 
 import "./LoginPage.css";
+import { validationEmail } from "../../helpers";
 
 export const LoginPage = () => {
 
-    const { handleOnLogin } = useAuthStore()
+    const { handleOnLogin, handleOnErrorForm } = useAuthStore()
 
-    const [formValue, setFormValue] = useState({
+    const [loginForm, setLoginForm] = useState({
         email: '',
         password: ''
     })
 
-    const onInputChange = (event) => {
+    const [registerForm, setRegisterForm] = useState({
+        name: '',
+        email: '',
+        password: '',
+        repeatPassword: ''
+    })
+
+    const [errorControl, setErrorControl] = useState({
+        name: null,
+        email: null,
+        password: null,
+    })
+
+    const onInputChange = (event, setValues) => {
         const { target } = event
 
-        setFormValue({
+        setValues((formValue) => ({
             ...formValue,
             [target.name]: target.value
-        })
+        }))
     }
 
-    const onSubmit = (event) => {
+    const onSubmitLogin = (event) => {
         event.preventDefault()
+        handleOnLogin(loginForm.email, loginForm.password)
+    }
 
-        handleOnLogin(formValue.email, formValue.password)
+    const onSubmitRegister = (event) => {
+        event.preventDefault()
+        // Sera true cuando todos pasen la validacion de no estar vacios, de lo contrario sera false
+        let isEmpyValidation = true
+        let errorTemp = { 
+            name: null,
+            email: null,
+            password: null,
+        }
+
+        Object.keys(registerForm).forEach((key) => {
+            if (!registerForm[key]) {
+                isEmpyValidation = false
+            }
+        })
+
+        if (!isEmpyValidation) return handleOnErrorForm("Todos los campos son obligatorios")
+
+        if (!validationEmail(registerForm.email)) {
+            errorTemp = {...errorTemp, ["email"]: "El email es invalido"}
+        }
+
+        if (registerForm.name.length < 4) {
+            errorTemp = {...errorTemp, ["name"]: "El usuario debe tener minimo 4 caracteres"}
+        }
+
+        if (registerForm.password < 7) {
+            errorTemp = {...errorTemp, ["password"]: "La constrasena debe tener mas de 6 caracteres"}
+        }
+
+        if (registerForm.repeatPassword !== registerForm.password) {
+            errorTemp = {...errorTemp, ["password"]: "Las contraseñas no coinciden"}
+        }
+
+        if (!errorTemp.email && !errorTemp.name && !errorTemp.password) {
+            console.log(errorTemp)
+            console.log("Todo listo para hacer peticion")
+        }
+
+        setErrorControl(errorTemp)
     }
 
     return (
@@ -32,15 +87,15 @@ export const LoginPage = () => {
             <div className="row">
                 <div className="col-md-6 login-form-1">
                     <h3>Ingreso</h3>
-                    <form onSubmit={onSubmit}>
+                    <form onSubmit={onSubmitLogin}>
                         <div className="form-group mb-2">
                             <input
                                 type="text"
                                 className="form-control"
                                 placeholder="Correo"
                                 name="email"
-                                onChange={onInputChange}
-                                value={formValue.email}
+                                onChange={(e) => onInputChange(e, setLoginForm)}
+                                value={loginForm.email}
                             />
                         </div>
                         <div className="form-group mb-2">
@@ -49,8 +104,8 @@ export const LoginPage = () => {
                                 className="form-control"
                                 placeholder="Contraseña"
                                 name="password"
-                                onChange={onInputChange}
-                                value={formValue.password}
+                                onChange={(e) => onInputChange(e, setLoginForm)}
+                                value={loginForm.password}
                             />
                         </div>
                         <div className="d-grid gap-2 mt-3">
@@ -65,26 +120,33 @@ export const LoginPage = () => {
 
                 <div className="col-md-6 login-form-2">
                     <h3>Registro</h3>
-                    <form>
+                    <form onSubmit={onSubmitRegister}>
                         <div className="form-group mb-2">
                             <input
                                 type="text"
-                                className="form-control"
                                 placeholder="Nombre"
+                                className="form-control"
+                                name="name"
+                                onChange={(e) => onInputChange(e, setRegisterForm)}
                             />
                         </div>
                         <div className="form-group mb-2">
                             <input
                                 type="email"
-                                className="form-control"
                                 placeholder="Correo"
+                                name="email"
+                                onChange={(e) => onInputChange(e, setRegisterForm)}
+                                className={`form-control ${errorControl?.email && "is-invalid"}`}
                             />
+                            { errorControl?.email &&  (<div className="invalid-feedback">{errorControl.email}</div>) }
                         </div>
                         <div className="form-group mb-2">
                             <input
                                 type="password"
                                 className="form-control"
                                 placeholder="Contraseña"
+                                name="password"
+                                onChange={(e) => onInputChange(e, setRegisterForm)}
                             />
                         </div>
 
@@ -93,6 +155,8 @@ export const LoginPage = () => {
                                 type="password"
                                 className="form-control"
                                 placeholder="Repita la contraseña"
+                                name="repeatPassword"
+                                onChange={(e) => onInputChange(e, setRegisterForm)}
                             />
                         </div>
 

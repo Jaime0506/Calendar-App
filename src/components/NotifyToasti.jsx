@@ -4,7 +4,6 @@ import { ToastContainer, toast } from "react-toastify";
 import { useAuthStore } from "../hooks";
 import "react-toastify/dist/ReactToastify.css";
 
-
 export const NotifyToasti = () => {
     const { errorMessage } = useAuthStore()
 

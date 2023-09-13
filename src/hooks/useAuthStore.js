@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 // en este caso estamos consumiendo nuestra propia api
 
 import { onLogin, onLogout } from "../store/auth/thunks"
+import { setErrorMessage } from "../store/auth/authSlice"
 
 export const useAuthStore = () => {
     const { status, uid, user, errorMessage } = useSelector(store => store.auth)
@@ -21,6 +22,11 @@ export const useAuthStore = () => {
         dispatch(onLogout())
     }
 
+    // No pasa por los thunks ya que es completamente sincronico
+    const handleOnErrorForm = (error) => {
+        dispatch(setErrorMessage(error))
+    }
+
     return {
         status,
         user,
@@ -28,6 +34,7 @@ export const useAuthStore = () => {
         uid,
         handleOnLogin,
         handleChecking,
-        handleOnLogout
+        handleOnLogout,
+        handleOnErrorForm
     }
 }
