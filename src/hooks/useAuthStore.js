@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 // Verificar porque el thunks, normalmente se usa para esperar las respuestas de un tercero
 // en este caso estamos consumiendo nuestra propia api
 
-import { onLogin, onLogout } from "../store/auth/thunks"
+import { onCheckingToken, onLogin, onLogout, onRegister } from "../store/auth/thunks"
 import { setErrorMessage } from "../store/auth/authSlice"
 
 export const useAuthStore = () => {
@@ -15,7 +15,14 @@ export const useAuthStore = () => {
     }
 
     const handleChecking = () => {
-        localStorage.getItem('auth-token') ? console.log("Existe sesion") : dispatch(onLogout())
+
+        const token = localStorage.getItem('token')
+
+        if(token){
+            dispatch(onCheckingToken())
+        } else {
+            dispatch(onLogout())
+        }
     }
 
     const handleOnLogout = () => {
@@ -27,6 +34,10 @@ export const useAuthStore = () => {
         dispatch(setErrorMessage(error))
     }
 
+    const handleOnRegister = (name, email, password) => {
+        dispatch(onRegister(name, email, password))
+    }
+
     return {
         status,
         user,
@@ -35,6 +46,7 @@ export const useAuthStore = () => {
         handleOnLogin,
         handleChecking,
         handleOnLogout,
-        handleOnErrorForm
+        handleOnErrorForm,
+        handleOnRegister
     }
 }

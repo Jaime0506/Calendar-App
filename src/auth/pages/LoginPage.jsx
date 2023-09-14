@@ -6,7 +6,7 @@ import { validationEmail } from "../../helpers";
 
 export const LoginPage = () => {
 
-    const { handleOnLogin, handleOnErrorForm } = useAuthStore()
+    const { handleOnLogin, handleOnErrorForm, handleOnRegister } = useAuthStore()
 
     const [loginForm, setLoginForm] = useState({
         email: '',
@@ -44,6 +44,7 @@ export const LoginPage = () => {
         event.preventDefault()
         // Sera true cuando todos pasen la validacion de no estar vacios, de lo contrario sera false
         let isEmpyValidation = true
+
         let errorTemp = { 
             name: null,
             email: null,
@@ -75,8 +76,8 @@ export const LoginPage = () => {
         }
 
         if (!errorTemp.email && !errorTemp.name && !errorTemp.password) {
-            console.log(errorTemp)
             console.log("Todo listo para hacer peticion")
+            handleOnRegister({...registerForm})
         }
 
         setErrorControl(errorTemp)
@@ -125,10 +126,11 @@ export const LoginPage = () => {
                             <input
                                 type="text"
                                 placeholder="Nombre"
-                                className="form-control"
                                 name="name"
                                 onChange={(e) => onInputChange(e, setRegisterForm)}
+                                className={`form-control ${errorControl?.name && "is-invalid"}`}
                             />
+                            { errorControl?.name &&  (<div className="invalid-feedback">{errorControl.name}</div>) }
                         </div>
                         <div className="form-group mb-2">
                             <input
@@ -143,11 +145,12 @@ export const LoginPage = () => {
                         <div className="form-group mb-2">
                             <input
                                 type="password"
-                                className="form-control"
                                 placeholder="Contraseña"
                                 name="password"
                                 onChange={(e) => onInputChange(e, setRegisterForm)}
+                                className={`form-control ${errorControl?.password && "is-invalid"}`}
                             />
+                            { errorControl?.password &&  (<div className="invalid-feedback">{errorControl.password}</div>) }
                         </div>
 
                         <div className="form-group mb-2">
