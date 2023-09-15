@@ -14,7 +14,7 @@ registerLocale("es", es);
 
 export const CalendarModal = () => {
     const { isVisibleModal, closeDateModal } = useUiStore();
-    const { activeEvent, startSavingEvent } = useCalendarStore();
+    const { activeEvent, handleOnSavingEvent } = useCalendarStore();
 
     const {
         formValues,
@@ -44,7 +44,7 @@ export const CalendarModal = () => {
 
         if (response?.message)  return;
 
-        startSavingEvent(formValues);
+        handleOnSavingEvent(formValues);
         closeDateModal();
     };
 

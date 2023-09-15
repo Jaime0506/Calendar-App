@@ -3,10 +3,10 @@ import { useCalendarStore, useUiStore } from "../../hooks";
 
 export const FabAddNew = () => {
     const { openDateModal } = useUiStore();
-    const { setActiveEvent } = useCalendarStore();
+    const { handleOnSetActiveEvent } = useCalendarStore();
 
     const click = () => {
-        setActiveEvent({
+        handleOnSetActiveEvent({
             title: "",
             notes: "",
             start: new Date(),
