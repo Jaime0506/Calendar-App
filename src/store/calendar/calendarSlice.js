@@ -1,21 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addHours } from "date-fns";
 
 const initialState = {
-    events: [
-        {
-            _id: new Date().getTime(),
-            title: "Programando ando",
-            notes: "hay que aprender mucho",
-            start: new Date(),
-            end: addHours(new Date(), 2),
-            bgColor: "#fafafa",
-            user: {
-                uid: "1234",
-                name: "Jaime",
-            },
-        },
-    ],
+    events: [],
     activeEvent: null,
 };
 
@@ -30,6 +16,10 @@ export const calendarSlice = createSlice({
         newEvent: (state, { payload }) => {
             state.events.push(payload)
             state.activeEvent = null;
+        },
+
+        loadingEvents: (state, { payload }) => {
+            state.events = payload
         },
 
         updateEvent: (state, { payload }) => {
@@ -52,4 +42,4 @@ export const calendarSlice = createSlice({
     },
 });
 
-export const { setActiveEvent, newEvent, updateEvent, deleteEvent } = calendarSlice.actions;
+export const { setActiveEvent, newEvent, updateEvent, deleteEvent, loadingEvents } = calendarSlice.actions;

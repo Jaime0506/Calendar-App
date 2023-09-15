@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { onDeleteEvent, onSavingEvent, onSetActiveEvent, onUpdateEvent } from "../store/calendar/thunks";
+import { onDeleteEvent, onLoadingEvents, onNewEvent, onSetActiveEvent, onUpdateEvent } from "../store/calendar/thunks";
 
 export const useCalendarStore = () => {
     const { events, activeEvent } = useSelector((store) => store.calendar);
@@ -18,12 +18,16 @@ export const useCalendarStore = () => {
         } else {
             // DE LO CONTRARIO SIGNIFICA QUE ESTAMOS CREANDO UN EVENTO Y DEBEMOS
             // ASIGNARLE UN _ID A TRAVES DEL BACKEND
-            dispatch(onSavingEvent({ ...calendarEvent, _id: new Date().getTime() }))
+            dispatch(onNewEvent({...calendarEvent }))
         }
     }
 
     const handleOnDeleteEvent = () => {
         dispatch(onDeleteEvent())
+    }
+
+    const handleOnLoadingEvents = () => {
+        dispatch(onLoadingEvents())
     }
 
     return {
@@ -34,5 +38,6 @@ export const useCalendarStore = () => {
         handleOnSetActiveEvent,
         handleOnSavingEvent,
         handleOnDeleteEvent,
+        handleOnLoadingEvents
     };
 };

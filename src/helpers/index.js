@@ -3,3 +3,4 @@ export * from "./calendarLocalizer"
 export * from "./customStylesModal"
 export * from './getEnv'
 export * from './validationEmail'
+export * from './parseStringToDateEvents'

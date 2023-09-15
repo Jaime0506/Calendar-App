@@ -7,11 +7,12 @@ import { localizer, getMessages } from "../../helpers";
 import { Navbar, CalendarEvent, CalendarModal, FabAddNew, FabDelete } from "../";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { useEffect } from "react";
 
 export const CalendarPage = () => {
     // Guardamos en el locale storage, la ultima vista visitada
     const { openDateModal } = useUiStore()
-    const { events, handleOnSetActiveEvent } = useCalendarStore()
+    const { events, handleOnSetActiveEvent, handleOnLoadingEvents } = useCalendarStore()
 
     const [lastView, setLastView] = useState(
         localStorage.getItem("lastView") || "week"
@@ -30,6 +31,11 @@ export const CalendarPage = () => {
         localStorage.setItem("lastView", event);
         setLastView(event);
     };    
+
+    useEffect(() => {
+        handleOnLoadingEvents()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     // eslint-disable-next-line no-unused-vars
     const eventStyleGetter = (event, start, end, isSelected) => {
