@@ -1,6 +1,7 @@
+import { parseISO } from "date-fns"
 import { calendarApi } from "../../api"
 import { parseStringToDateEvents } from "../../helpers"
-import { loadingEvents, newEvent, setActiveEvent } from "./calendarSlice"
+import { loadingEvents, newEvent, setActiveEvent, updateEvent } from "./calendarSlice"
 
 export const onNewEvent = (calendarEvent) => {
     return async (dispatch) => {
@@ -30,9 +31,22 @@ export const onNewEvent = (calendarEvent) => {
     }
 }
 
-export const onUpdateEvent = () => {
-    return async () => {
-        console.log("Actualizando ando")
+export const onUpdateEvent = (calendarEvent) => {
+    return async (dispatch) => {
+        try {
+            const { data } = await calendarApi.put(`/events/update/${calendarEvent.id}`, { ...calendarEvent })
+            
+            if (data.ok) {
+                // Errores con las fechas - Tener en cuenta que las fechas que nos retorna el backend estan en formato diferente al que puuede procesar nuestro calendar-react 
+
+                data.event.start = parseISO(data.event.start)
+                data.event.end = parseISO(data.event.end)
+
+                dispatch(updateEvent(data.event))
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
 

@@ -58,7 +58,7 @@ export const CalendarModal = () => {
             closeTimeoutMS={200}
         >
             <div className="p-3">
-                {activeEvent?._id ? (
+                {activeEvent?.id ? (
                     <>
                         <h1> Editar Evento </h1>
                         <hr />

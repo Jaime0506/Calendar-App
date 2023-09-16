@@ -18,8 +18,7 @@ export const CalendarPage = () => {
         localStorage.getItem("lastView") || "week"
     );
 
-    const onDobleClick = (event) => {
-        console.log(event)
+    const onDobleClick = () => {
         openDateModal()
     };
 

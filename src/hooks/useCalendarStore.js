@@ -11,7 +11,7 @@ export const useCalendarStore = () => {
 
     const handleOnSavingEvent = (calendarEvent) => {
         
-        if (calendarEvent._id) {
+        if (calendarEvent.id) {
             // SI LA RESPUESTA DEL BACKEND TIENE ID, SIGNIFICA QUE ESTAMOS
             // ACTUALIZANDO UN EVENTO
             dispatch(onUpdateEvent({ ...calendarEvent }))
