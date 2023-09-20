@@ -1,4 +1,5 @@
 import { calendarApi } from "../../api"
+import { cleanData } from "../calendar/calendarSlice"
 import { checking, login, logout } from "./authSlice"
 
 export const onLogin = (email, password) => {
@@ -27,6 +28,7 @@ export const onLogout = () => {
         localStorage.removeItem('token-init-date')
 
         dispatch(logout())
+        dispatch(cleanData())
     }
 }
 

@@ -11,7 +11,7 @@ export const onNewEvent = (calendarEvent) => {
                 notes: calendarEvent.notes,
                 start: calendarEvent.start,
                 end: calendarEvent.end,
-                bgColor: "#fafafa"
+                bgColor: calendarEvent.color
             }
 
             const { data } = await calendarApi.post('/events/new', calendarToSend)

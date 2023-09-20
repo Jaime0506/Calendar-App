@@ -9,16 +9,15 @@ export const useCalendarStore = () => {
         dispatch(onSetActiveEvent(calendarEvent))
     };
 
-    const handleOnSavingEvent = (calendarEvent) => {
-        
+    const handleOnSavingEvent = (calendarEvent, color) => {
         if (calendarEvent.id) {
             // SI LA RESPUESTA DEL BACKEND TIENE ID, SIGNIFICA QUE ESTAMOS
             // ACTUALIZANDO UN EVENTO
-            dispatch(onUpdateEvent({ ...calendarEvent }))
+            dispatch(onUpdateEvent({ ...calendarEvent, bgColor: color }))
         } else {
             // DE LO CONTRARIO SIGNIFICA QUE ESTAMOS CREANDO UN EVENTO Y DEBEMOS
             // ASIGNARLE UN _ID A TRAVES DEL BACKEND
-            dispatch(onNewEvent({...calendarEvent }))
+            dispatch(onNewEvent({...calendarEvent, color }))
         }
     }
 

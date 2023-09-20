@@ -11,7 +11,7 @@ import { useEffect } from "react";
 
 export const CalendarPage = () => {
     // Guardamos en el locale storage, la ultima vista visitada
-    const { openDateModal } = useUiStore()
+    const { openDateModal, isVisibleModal } = useUiStore()
     const { events, handleOnSetActiveEvent, handleOnLoadingEvents } = useCalendarStore()
 
     const [lastView, setLastView] = useState(
@@ -39,9 +39,7 @@ export const CalendarPage = () => {
     // eslint-disable-next-line no-unused-vars
     const eventStyleGetter = (event, start, end, isSelected) => {
         const style = {
-            backgroundColor: "#347CF7",
-            borderRadius: "0px",
-            opacity: 0.8,
+            backgroundColor: event.bgColor,
             color: "white",
         };
 
@@ -70,7 +68,7 @@ export const CalendarPage = () => {
                 onSelectEvent={onSelected}
                 onView={onViewChanged}
             />
-            <CalendarModal />
+            { isVisibleModal && <CalendarModal />}
             <FabAddNew />
             <FabDelete />
         </>

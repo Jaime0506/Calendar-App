@@ -38,8 +38,13 @@ export const calendarSlice = createSlice({
                 state.events = state.events.filter((event) => event.id !== state.activeEvent.id)
                 state.activeEvent = null
             }
+        },
+
+        cleanData: (state) => {
+            state.activeEvent = null
+            state.events = []
         }
     },
 });
 
-export const { setActiveEvent, newEvent, updateEvent, deleteEvent, loadingEvents } = calendarSlice.actions;
+export const { setActiveEvent, newEvent, updateEvent, deleteEvent, loadingEvents, cleanData } = calendarSlice.actions;
