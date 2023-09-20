@@ -1,7 +1,7 @@
 import { parseISO } from "date-fns"
 import { calendarApi } from "../../api"
 import { parseStringToDateEvents } from "../../helpers"
-import { loadingEvents, newEvent, setActiveEvent, updateEvent } from "./calendarSlice"
+import { deleteEvent, loadingEvents, newEvent, setActiveEvent, updateEvent } from "./calendarSlice"
 
 export const onNewEvent = (calendarEvent) => {
     return async (dispatch) => {
@@ -51,8 +51,18 @@ export const onUpdateEvent = (calendarEvent) => {
 }
 
 export const onDeleteEvent = () => {
-    return async () => {
-        console.log("Borrando ando")
+    return async (dispatch, getState) => {
+        const event = getState().calendar.activeEvent
+        
+        try {
+            const { data } = await calendarApi.delete(`/events/delete/${event.id}`)
+
+            if (data.ok) {
+                dispatch(deleteEvent())
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
 
