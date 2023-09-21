@@ -10,7 +10,9 @@ module.exports = {
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   settings: { react: { version: '18.2' } },
-  plugins: ['react-refresh'],
+  // Agrego jest en los plugins para que no me marque error al momento
+  // de llamar las funciones globales de esta libreria
+  plugins: ['react-refresh', "jest"],
   rules: {
     'react-refresh/only-export-components': [
       'warn',
