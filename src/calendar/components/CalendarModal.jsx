@@ -11,7 +11,12 @@ import { customStylesModal } from "../../helpers";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-ReactModal.setAppElement("#root");
+// Esta funcion nos da problemas, cuando estamos es testing, por eso validamos 
+// en que moodo nos encontramos
+if (import.meta.env.VITE_MODE != "test") {
+    ReactModal.setAppElement("#root");
+}
+
 registerLocale("es", es);
 
 export const CalendarModal = () => {
