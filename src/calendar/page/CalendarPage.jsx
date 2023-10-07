@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar } from "react-big-calendar";
 
 import { useUiStore, useCalendarStore } from "../../hooks";
@@ -7,7 +7,6 @@ import { localizer, getMessages } from "../../helpers";
 import { Navbar, CalendarEvent, CalendarModal, FabAddNew, FabDelete } from "../";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useEffect } from "react";
 
 export const CalendarPage = () => {
     // Guardamos en el locale storage, la ultima vista visitada

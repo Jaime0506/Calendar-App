@@ -1,0 +1,120 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing in <AppRouter /> should show <CalendarPage /> when status is authenticated 1`] = `
+<div>
+  <h1>
+    Calendar Page
+  </h1>
+</div>
+`;
+
+exports[`Testing in <AppRouter /> should show <LoginPage /> when status is not-authenticated 1`] = `
+<div>
+  <div
+    class="container login-container"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="col-md-6 login-form-1"
+      >
+        <h3>
+          Ingreso
+        </h3>
+        <form>
+          <div
+            class="form-group mb-2"
+          >
+            <input
+              class="form-control"
+              name="email"
+              placeholder="Correo"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="form-group mb-2"
+          >
+            <input
+              class="form-control"
+              name="password"
+              placeholder="Contraseña"
+              type="password"
+              value=""
+            />
+          </div>
+          <div
+            class="d-grid gap-2 mt-3"
+          >
+            <input
+              class="btnSubmit"
+              type="submit"
+              value="Login"
+            />
+          </div>
+        </form>
+      </div>
+      <div
+        class="col-md-6 login-form-2"
+      >
+        <h3>
+          Registro
+        </h3>
+        <form>
+          <div
+            class="form-group mb-2"
+          >
+            <input
+              class="form-control null"
+              name="name"
+              placeholder="Nombre"
+              type="text"
+            />
+          </div>
+          <div
+            class="form-group mb-2"
+          >
+            <input
+              class="form-control null"
+              name="email"
+              placeholder="Correo"
+              type="email"
+            />
+          </div>
+          <div
+            class="form-group mb-2"
+          >
+            <input
+              class="form-control null"
+              name="password"
+              placeholder="Contraseña"
+              type="password"
+            />
+          </div>
+          <div
+            class="form-group mb-2"
+          >
+            <input
+              class="form-control"
+              name="repeatPassword"
+              placeholder="Repita la contraseña"
+              type="password"
+            />
+          </div>
+          <div
+            class="d-grid gap-2 mt-3"
+          >
+            <input
+              class="btnSubmit"
+              type="submit"
+              value="Crear cuenta"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;
